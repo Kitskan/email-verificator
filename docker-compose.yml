@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  email_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    container_name: email_app
+    working_dir: /app
+    command: sh -c "npm run start:dev"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      # - mysql
+    volumes:
+      - .:/app
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ""
+      MONGO_INITDB_ROOT_PASSWORD: ""
+    volumes:
+      - mongodb_data:/data/db
+
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: mysql-container
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: password
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+
+volumes:
+  mongodb_data:
+  # mysql_data:
