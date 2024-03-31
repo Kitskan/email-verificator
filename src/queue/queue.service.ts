@@ -1,14 +1,19 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Queue } from '../schema/queue.schema';
 import { CreateQueueDto } from './dto/createQueueDto.dto';
+import { GatewayService } from '../gateway/gateway.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class QueueService {
   constructor(
+    @Inject(forwardRef(() => EmailService))
+    private readonly emailService: EmailService,
     @InjectModel(Queue.name)
     private readonly queueModel: Model<Queue>,
+    private readonly gatewayService: GatewayService,
   ) {}
 
   private isExecuting: boolean = false;
@@ -50,9 +55,9 @@ export class QueueService {
     let isEmtyDb = documentsCount === 0;
 
     while (!isEmtyDb) {
-      console.log('-------get------');
+      console.log('-------get chunk------');
       await this.promiseHandler(queueChunk);
-      console.log('--------delete----');
+      console.log('--------delete chunk----');
       await this.deleteQueues(queueChunk);
 
       documentsCount = await this.getItemCount();
@@ -67,8 +72,7 @@ export class QueueService {
 
   private async promiseHandler(queue: Queue[]) {
     const getRandomTime = () => {
-      // return Math.floor(Math.random() * (100000 - 5000 + 1)) + 5000;
-      return Math.floor(Math.random() * (100000 - 0 + 1)) + 0;
+      return Math.floor(Math.random() * (100000 - 5000 + 1)) + 5000;
     };
 
     function* processGen(promises) {
@@ -93,11 +97,12 @@ export class QueueService {
     for (const value of generators) {
       value.then((data) => {
         console.log(data);
+        this.gatewayService.sendToClient(data);
+        this.emailService.create(data);
         this.finishCount += 1;
       });
     }
-    console.log('promises start all: ', promises);
+
     await Promise.all(promises);
-    console.log('promises: ', promises);
   }
 }
