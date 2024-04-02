@@ -17,7 +17,7 @@ export class EmailService {
     await this.queueService.addQueues(emailList);
   }
 
-  async create(email: EmailEntity[]): Promise<EmailEntity[]> {
+  public async create(email: EmailEntity[]): Promise<EmailEntity[]> {
     const newEmail = this.emailRepository.create(email);
     return this.emailRepository.save(newEmail);
   }

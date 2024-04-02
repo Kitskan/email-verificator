@@ -14,11 +14,11 @@ export class GatewayService {
   server: Server;
 
   @SubscribeMessage('email_event')
-  handleEvent(@MessageBody() data: string): string {
+  public handleEvent(@MessageBody() data: string): string {
     return data;
   }
 
-  sendToClient(message: string): void {
+  public sendToClient(message: string): void {
     this.server.emit('email_event', message);
   }
 }

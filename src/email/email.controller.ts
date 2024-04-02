@@ -10,5 +10,4 @@ export class EmailController {
     const { emailList } = body;
     await this.emailService.add(emailList);
   }
-
 }
