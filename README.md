@@ -1,6 +1,12 @@
 
 ## API Reference
 
+### To run this project
+
+```bash
+  ./start.sh
+```
+
 #### Add email list
 
 ```http
