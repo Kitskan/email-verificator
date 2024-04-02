@@ -3,8 +3,8 @@
 
 #### Add email list
 
-```http
-  POST localhost:3000/email/add
+```http POST
+  localhost:3000/email/add
 ```
 
 | Body parameter | Type     | Description                |
