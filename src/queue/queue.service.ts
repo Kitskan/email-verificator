@@ -80,12 +80,12 @@ export class QueueService {
         yield promise;
       }
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const promises = queue.map((q) => {
       const randomTime = getRandomTime();
       return new Promise((resolve) => {
         setTimeout(() => {
           const { email } = q;
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           const isValid = emailRegex.test(email);
           resolve({ email, isValid, randomTime });
         }, randomTime);
