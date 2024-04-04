@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { QueueModule } from './queue/queue.module';
 import { EmailModule } from './email/email.module';
+import { PromiseHandlerModule } from './promise-handler/promise-handler.module';
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://mongodb:27017/emaildb'),
@@ -17,7 +18,6 @@ import { EmailModule } from './email/email.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    QueueModule,
     EmailModule,
   ],
   controllers: [],
